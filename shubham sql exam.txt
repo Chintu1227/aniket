@@ -1,0 +1,128 @@
+
+
+
+name: shubham chintalwar(pg19)
+ 
+exam  on sql 
+
+
+
+
+create database exam;
+use exam;
+show tables;
+select * from bank_account_details;
+select * from bank_account_transaction;
+select * from bank_customer;
+select * from orders;
+select * from customer;
+
+## --1. Write a SQL query which will sort out the customer and their grade
+##by at least one seller, who belongs to a region.
+
+select a.custemor_id,a.cust_name,a.grade,b.ord_no,c.salesman_id 
+from customer a, orders b, salesman c 
+where a.custemor_id =b.customer_id and b.salesman_id=c.salesman_id;
+
+
+##--2. Write a query for extracting the data from the order table for the
+## salesman who earned the maximum commission.
+
+select ord_no, purch_amt, ord_date, salesman_id 
+from orders
+ where salesman_id in(select salesman_id 
+ from salesman 
+ where commision = (select max(commision) from salesman));
+ 
+  
+##3)-- From orders retrieve only ord_no, purch_amt, ord_date, ord_date,
+##salesman_id where salesman’s city is Nagpur(Note salesman_id of
+##orderstable must be other than the list within the IN operator.)
+
+select a.ord_no , a.purch_amt , a.ord_date , a.salesman_id ,b.city from salesman b, orders a
+where a.salesman_id = b.salesman_id 
+and city= 'nagpur';
+
+##4. Write a query to create a report with the order date in such a way
+##that the latest order date will come last along with the total purchase
+##amount and the total commission for that date is (15 % for all
+##sellers).
+
+SELECT ord_date, SUM(purch_amt), 
+SUM(purch_amt)*.15 
+FROM orders 
+GROUP BY ord_date 
+ORDER BY ord_date;   
+
+
+##--5. Retrieve ord_no, purch_amt, ord_date, ord_date, salesman_id from
+##Orders table and display only those sellers whose purch_amt is
+##greater than average purch_amt.
+
+select ord_no, purch_amt, ord_date, ord_date, salesman_id 
+from orders 
+where purch_amt > (select avg(purch_amt) from orders);
+
+##-- 6.Write a query to determine the Nth (Say N=5) highest purch_amt from
+##-- Orders table.
+select purch_amt, round(purch_amt) from orders order by round(purch_amt) desc limit 4,1;
+
+##-- 7.7. What are Entities and Relationships? 
+--Entities - An entity relationship diagram shows the relationships of entity sets stored in a database
+An Entity–relationship model (ER model) describes the structure of a database with the help of a diagram,
+which is known as Entity Relationship Diagram (ER Diagram). 
+An ER model is a design or blueprint of a database that can later be implemented as a database.
+The main components of E-R model are: entity set and relationship set
+
+
+##-- 8  8. Print customer_id, account_number and balance_amount, condition
+##-- that if balance_amount is nil then assign transaction_amount for
+##-- account_type = "Credit Card"
+
+
+select Customer_id ,Account_Number , Balance_amount from bank_account_details
+where Balance_amount= 'null' 
+and  Account_type= 'Credit Card';
+
+##-- 9. Print customer_id, account_number, balance_amount, conPrint
+##-- account_number, balance_amount, transaction_amount from
+##-- Bank_Account_Details and bank_account_transaction for all the
+##-- transactions occurred during march, 2020 and april, 2020.
+
+select a.Customer_id, a.Account_number, a.Balance_amount, b.Transaction_amount
+from bank_account_details a , bank_account_transaction b
+where a.Account_Number = b.Account_Number 
+and( date_format(Transaction_date , '%Y-%m') between "2020-03" and "2020-04" );
+
+
+##-- 10. Print all of the customer id, account number, balance_amount,
+##-- transaction_amount from bank_cutomer, bank_account_details and
+##-- bank_account_transactions tables where excluding all of their
+##-- transactions in march, 2020 month .
+
+
+select a.customer_id , a.Account_Number , a.Balance_amount, b.Transaction_amount , c.*
+ from bank_account_details a,
+ bank_account_transaction b ,
+ bank_customer c
+ where
+ a.Account_Number=b.Account_number 
+ and a.Customer_id=c.customer_id
+and( date_format(Transaction_date , '%Y-%m') = "2020-03"  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
